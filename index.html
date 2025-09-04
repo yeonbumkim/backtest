@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🚀 백테스트 투자 시뮬레이터</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <!-- Header Section -->
+        <header class="header">
+            <div class="header-content">
+                <h1>🚀 백테스트 투자 시뮬레이터</h1>
+                <p class="subtitle">타임머신으로 과거 투자의 결과를 확인해보세요!</p>
+            </div>
+        </header>
+
+        <!-- Investment Input Section -->
+        <section class="investment-input">
+            <div class="card">
+                <h2>💰 투자 설정</h2>
+                <div class="input-grid">
+                    <div class="input-group">
+                        <label for="investmentYear">투자 연도</label>
+                        <select id="investmentYear" class="select-input">
+                            <option value="">연도를 선택하세요</option>
+                        </select>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="investmentAmount">투자 금액 (KRW)</label>
+                        <input type="number" id="investmentAmount" class="number-input" placeholder="1,000,000" min="1" step="1000">
+                        <div class="currency-toggle">
+                            <label>
+                                <input type="checkbox" id="currencyToggle">
+                                USD로 투자하기
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="stockSelect">투자할 주식</label>
+                        <select id="stockSelect" class="select-input">
+                            <option value="">주식을 선택하세요</option>
+                        </select>
+                    </div>
+                    
+                    <div class="input-group">
+                        <button id="calculateBtn" class="calculate-btn">🎯 수익률 계산하기</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Results Section -->
+        <section class="results" id="resultsSection" style="display: none;">
+            <div class="card">
+                <h2>📊 투자 결과</h2>
+                <div class="results-grid">
+                    <div class="result-card profit-card">
+                        <div class="result-icon">💎</div>
+                        <div class="result-content">
+                            <h3>현재 보유 가치</h3>
+                            <p class="result-value" id="currentValue">-</p>
+                        </div>
+                    </div>
+                    
+                    <div class="result-card return-card">
+                        <div class="result-icon">📈</div>
+                        <div class="result-content">
+                            <h3>총 수익률</h3>
+                            <p class="result-value" id="totalReturn">-</p>
+                        </div>
+                    </div>
+                    
+                    <div class="result-card gain-card">
+                        <div class="result-icon">💰</div>
+                        <div class="result-content">
+                            <h3>순수익</h3>
+                            <p class="result-value" id="totalGain">-</p>
+                        </div>
+                    </div>
+                    
+                    <div class="result-card annual-card">
+                        <div class="result-icon">📅</div>
+                        <div class="result-content">
+                            <h3>연평균 수익률</h3>
+                            <p class="result-value" id="annualReturn">-</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Investment Timeline Chart -->
+            <div class="card">
+                <h2>📈 투자 성장 그래프</h2>
+                <div class="chart-container">
+                    <canvas id="investmentChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Exchange Rate Impact -->
+            <div class="card">
+                <h2>💱 환율 영향</h2>
+                <div class="exchange-info">
+                    <div class="exchange-item">
+                        <span class="label">투자 당시 환율:</span>
+                        <span class="value" id="initialExchange">-</span>
+                    </div>
+                    <div class="exchange-item">
+                        <span class="label">현재 환율:</span>
+                        <span class="value" id="currentExchange">-</span>
+                    </div>
+                    <div class="exchange-item">
+                        <span class="label">환율 변동률:</span>
+                        <span class="value" id="exchangeChange">-</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Fun Facts Section -->
+            <div class="card fun-facts">
+                <h2>🎉 재미있는 사실들</h2>
+                <div id="funFacts" class="facts-container">
+                    <!-- Dynamic fun facts will be inserted here -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Stock Information Section -->
+        <section class="stock-info">
+            <div class="card">
+                <h2>📋 주요 미국 주식 정보</h2>
+                <div class="stock-grid" id="stockGrid">
+                    <!-- Stock cards will be populated by JavaScript -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Historical Data Section -->
+        <section class="historical-data">
+            <div class="card">
+                <h2>📚 역사적 데이터</h2>
+                <div class="data-tabs">
+                    <button class="tab-btn active" data-tab="exchange">환율 데이터</button>
+                    <button class="tab-btn" data-tab="stocks">주식 데이터</button>
+                </div>
+                
+                <div id="exchangeTab" class="tab-content active">
+                    <div class="data-table-container">
+                        <table class="data-table" id="exchangeTable">
+                            <thead>
+                                <tr>
+                                    <th>연도</th>
+                                    <th>평균 환율 (KRW/USD)</th>
+                                    <th>전년 대비 변동률</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Exchange rate data will be populated here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <div id="stocksTab" class="tab-content">
+                    <div class="stock-selector">
+                        <select id="stockDataSelect">
+                            <option value="">주식을 선택하여 데이터 보기</option>
+                        </select>
+                    </div>
+                    <div class="data-table-container">
+                        <table class="data-table" id="stockTable">
+                            <thead>
+                                <tr>
+                                    <th>연도</th>
+                                    <th>주가 (USD)</th>
+                                    <th>전년 대비 변동률</th>
+                                    <th>분할 조정</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Stock data will be populated here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>📈 이 시뮬레이터는 교육 목적으로 제작되었으며, 실제 투자 결과를 보장하지 않습니다.</p>
+            <p>💡 과거 수익률이 미래 수익률을 보장하지 않습니다.</p>
+        </footer>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-content">
+            <div class="spinner"></div>
+            <p>계산 중...</p>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
